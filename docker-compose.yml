@@ -1,0 +1,88 @@
+version: "3"
+services:
+  dev-app:
+    build:
+      context: ./dev
+      dockerfile: Dockerfile.dev
+    env_file: env.dev
+    volumes:
+      - ./dev:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - dev-db
+    networks:
+      - dev_net
+  dev-db:
+    image: mongo
+    command: mongod
+    ports:
+      - 27017:27017
+    volumes:
+      - ./dev/data/db:/data/db
+    networks:
+      dev_net:
+        ipv4_address: 172.21.0.2
+  test-app:
+    build:
+      context: ./test
+      dockerfile: Dockerfile.test
+    env_file: env.test
+    volumes:
+      - ./test:/app
+    ports:
+      - 3001:3000
+    depends_on:
+      - test-db
+    networks:
+      - test_net
+  test-db:
+    image: mongo
+    command: mongod
+    ports:
+      - 27018:27017
+    volumes:
+      - ./test/data/db:/data/db
+    networks:
+      test_net:
+        ipv4_address: 172.22.0.2
+  release-app:
+    build:
+      context: ./release
+      dockerfile: Dockerfile.release
+    env_file: env.release
+    volumes:
+      - ./release:/app
+    ports:
+      - 3002:3000
+    depends_on:
+      - release-db
+    networks:
+      - release_net
+  release-db:
+    image: mongo
+    command: mongod
+    ports:
+      - 27019:27017
+    volumes:
+      - ./release/data/db:/data/db
+    networks:
+      release_net:
+        ipv4_address: 172.23.0.2
+networks:
+  dev_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16
+  test_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+  release_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16
+
