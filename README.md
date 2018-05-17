@@ -27,8 +27,14 @@
 Например, ветка dev запускается командой: 
 `docker-compose up -d dev-app`
 
-Порты доступа к приложению:gi
+Порты доступа к приложению:
+* dev - 3000
 * test - 3001
 * release - 3002
 Например, в ветке dev: http://localhost:3000
+
+Для того чтобы добавить пользователя для входа в Apostrophe
+необходимо выполнить:
+`docker-compose exec <app-service> node app.js apostrophe-users:add <user> <user>`
+Например, `docker-compose exec dev-app node app.js apostrophe-users:add admin admin`
 
