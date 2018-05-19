@@ -1,0 +1,31 @@
+version: "3"
+services:
+  dev-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    env_file: env.dev
+    volumes:
+      - ./dev:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - dev-db
+    networks:
+      - dev_net
+  dev-db:
+    image: mongo
+    command: mongod
+    ports:
+      - 27017:27017
+    volumes:
+      - ./dev/data/db:/data/db
+    networks:
+      dev_net:
+        ipv4_address: 172.21.0.2
+networks:
+  dev_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.21.0.0/16

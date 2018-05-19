@@ -1,0 +1,32 @@
+version: "3"
+services:
+  release-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.release
+    env_file: env.release
+    volumes:
+      - ./release:/app
+    ports:
+      - 3002:3000
+    depends_on:
+      - release-db
+    networks:
+      - release_net
+  release-db:
+    image: mongo
+    command: mongod
+    ports:
+      - 27019:27017
+    volumes:
+      - ./release/data/db:/data/db
+    networks:
+      release_net:
+        ipv4_address: 172.23.0.2
+networks:
+  release_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.23.0.0/16
+

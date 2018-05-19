@@ -1,0 +1,32 @@
+version: "3"
+services:
+  test-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    env_file: env.test
+    volumes:
+      - ./test:/app
+    ports:
+      - 3001:3000
+    depends_on:
+      - test-db
+    networks:
+      - test_net
+  test-db:
+    image: mongo
+    command: mongod
+    ports:
+      - 27018:27017
+    volumes:
+      - ./test/data/db:/data/db
+    networks:
+      test_net:
+        ipv4_address: 172.22.0.2
+networks:
+  test_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
+
