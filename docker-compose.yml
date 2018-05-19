@@ -2,7 +2,7 @@ version: "3"
 services:
   dev-app:
     build:
-      context: ./dev
+      context: .
       dockerfile: Dockerfile.dev
     env_file: env.dev
     volumes:
@@ -25,7 +25,7 @@ services:
         ipv4_address: 172.21.0.2
   test-app:
     build:
-      context: ./test
+      context: .
       dockerfile: Dockerfile.test
     env_file: env.test
     volumes:
@@ -48,7 +48,7 @@ services:
         ipv4_address: 172.22.0.2
   release-app:
     build:
-      context: ./release
+      context: .
       dockerfile: Dockerfile.release
     env_file: env.release
     volumes:
